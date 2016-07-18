@@ -197,8 +197,8 @@ defmodule Exq.Redis.JobQueue do
   end
 
   def time_to_score(time) do
-    seconds = Timex.to_gregorian_microseconds(time) / 1_000_000
-    Float.to_string(seconds, decimals: 6)
+    microseconds = Timex.to_gregorian_microseconds(time)
+    Float.to_string(microseconds / 1_000_000)
   end
 
   def retry_or_fail_job(redis, namespace, %{retry: true} = job, error) do
