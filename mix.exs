@@ -33,16 +33,15 @@ defmodule Exq.Mixfile do
   # { :foobar, "0.1", git: "https://github.com/elixir-lang/foobar.git" }
   defp deps do
     [
-      { :uuid, ">= 1.0.0" },
-      { :redix, ">= 0.3.4"},
-      { :poison, ">= 1.2.0 or ~> 2.0"},
-      { :timex, "~> 3.0.3" },
-      { :excoveralls, "~> 0.3", only: :test },
-      { :flaky_connection, git: "https://github.com/hamiltop/flaky_connection.git", only: :test},
+      {:uuid, "~> 1.1.4" },
+      {:redix, "~> 0.4.0"},
+      {:poison, "~> 2.2.0"},
+      {:timex, "~> 3.0.3" },
+      {:excoveralls, "~> 0.5.5", only: :test},
+      {:flaky_connection, github: "hamiltop/flaky_connection", only: :test},
 
       # docs
-      {:ex_doc, ">= 0.10.0", only: :dev},
-      {:earmark, "~> 0.1", only: :dev},
+      {:ex_doc, ">= 0.13.0", only: :dev},
       {:inch_ex, ">= 0.0.0", only: :dev}
     ]
   end
