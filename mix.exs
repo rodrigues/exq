@@ -34,10 +34,10 @@ defmodule Exq.Mixfile do
   defp deps do
     [
       {:uuid, "~> 1.1.4" },
-      {:redix, "~> 0.4.0"},
-      {:poison, "~> 2.2.0"},
+      {:redix, "~> 0.3.6"},
+      {:poison, ">= 1.2.0 or ~> 2.0"},
       {:timex, "~> 3.0.3" },
-      {:excoveralls, "~> 0.5.5", only: :test},
+      {:excoveralls, "~> 0.3", only: :test},
       {:flaky_connection, github: "hamiltop/flaky_connection", only: :test},
 
       # docs
