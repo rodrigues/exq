@@ -34,7 +34,7 @@ Some OTP related documentation to look at:
 * http://elixir-lang.org/getting-started/mix-otp/supervisor-and-application.html
 * http://erlang.org/doc/
 
-If you need a durable jobs, retries with exponential backoffs, dynamically scheduled jobs in the future - that are all able to survive application restarts, then an externally backed queueing library such as Exq could be a good fit.
+If you need durable jobs, retries with exponential backoffs, dynamically scheduled jobs in the future – all able to survive application restarts – then, an externally backed queueing library such as Exq could be a good fit.
 
 ## Getting Started:
 
