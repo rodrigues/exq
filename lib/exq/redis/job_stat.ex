@@ -7,6 +7,7 @@ defmodule Exq.Redis.JobStat do
   require Logger
 
   alias Timex.Format.DateTime.Formatter
+  alias Timex.Format.DateTime.Formatters.Strftime
   alias Exq.Support.Binary
   alias Exq.Support.Process
   alias Exq.Support.Job
@@ -117,7 +118,7 @@ defmodule Exq.Redis.JobStat do
 
   defp format_current_date(current_date) do
     format_fn = fn(format) ->
-      Formatter.format!(current_date, format, :strftime)
+      Formatter.format!(current_date, format, Strftime)
     end
 
     {format_fn.("%Y-%m-%d %T %z"), format_fn.("%Y-%m-%d")}
