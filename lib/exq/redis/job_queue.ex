@@ -197,8 +197,13 @@ defmodule Exq.Redis.JobQueue do
   end
 
   def time_to_score(time) do
-    microseconds = Timex.to_gregorian_microseconds(time)
-    Float.to_string(microseconds / 1_000_000)
+    time
+    |> unix_seconds
+    |> Float.to_string
+  end
+
+  defp unix_seconds(time) do
+    DateTime.to_unix(time, :microseconds) / 1_000_000
   end
 
   def retry_or_fail_job(redis, namespace, %{retry: true} = job, error) do
@@ -359,7 +364,7 @@ defmodule Exq.Redis.JobQueue do
   end
 
   def to_job_json(queue, worker, args) do
-    to_job_json(queue, worker, args, Timex.to_gregorian_microseconds(Timex.now) / 1_000_000.0)
+    to_job_json(queue, worker, args, unix_seconds(Timex.now))
   end
   def to_job_json(queue, worker, args, enqueued_at) when is_atom(worker) do
     to_job_json(queue, to_string(worker), args, enqueued_at)
