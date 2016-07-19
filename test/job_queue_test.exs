@@ -2,7 +2,6 @@ defmodule JobQueueTest do
   use ExUnit.Case
   alias Exq.Redis.JobQueue
   alias Exq.Support.Job
-  alias Timex.Duration
 
   @host 'host-name'
 
@@ -85,9 +84,9 @@ defmodule JobQueueTest do
   end
 
   test "scheduler_dequeue enqueue_at" do
-    JobQueue.enqueue_at(:testredis, "test", "default", Timex.now, MyWorker, [])
+    JobQueue.enqueue_at(:testredis, "test", "default", DateTime.utc_now, MyWorker, [])
     {jid, job_json} = JobQueue.to_job_json("retry", MyWorker, [])
-    JobQueue.enqueue_job_at(:testredis, "test", job_json, jid, Timex.now, "test:retry")
+    JobQueue.enqueue_job_at(:testredis, "test", job_json, jid, DateTime.utc_now, "test:retry")
     assert JobQueue.scheduler_dequeue(:testredis, "test") == 2
     assert_dequeue_job(["default"], true)
     assert_dequeue_job(["default"], false)
@@ -97,19 +96,24 @@ defmodule JobQueueTest do
   end
 
   test "scheduler_dequeue max_score" do
+    add_usecs = fn(time, offset) ->
+      base = time |> DateTime.to_unix(:microseconds)
+      DateTime.from_unix!(base + offset, :microseconds)
+    end
+
     JobQueue.enqueue_in(:testredis, "test", "default", 300, MyWorker, [])
-    now = Timex.now
-    time1 = Timex.add(now, Duration.from_seconds(140))
+    now = DateTime.utc_now
+    time1 = add_usecs.(now, 140_000_000)
     JobQueue.enqueue_at(:testredis, "test", "default", time1, MyWorker, [])
-    time2 = Timex.add(now, Duration.from_seconds(150))
+    time2 = add_usecs.(now, 150_000_000)
     JobQueue.enqueue_at(:testredis, "test", "default", time2, MyWorker, [])
-    time2a = Timex.add(now, Duration.from_seconds(151))
-    time2b = Timex.add(now, Duration.from_seconds(159))
-    time3 = Timex.add(now, Duration.from_seconds(160))
+    time2a = add_usecs.(now, 151_000_000)
+    time2b = add_usecs.(now, 159_000_000)
+    time3 = add_usecs.(now, 160_000_000)
     JobQueue.enqueue_at(:testredis, "test", "default", time3, MyWorker, [])
-    time4 = Timex.add(now, Duration.from_microseconds(160_000_001))
+    time4 = add_usecs.(now, 160_000_001)
     JobQueue.enqueue_at(:testredis, "test", "default", time4, MyWorker, [])
-    time5 = Timex.add(now, Duration.from_seconds(300))
+    time5 = add_usecs.(now, 300_000_000)
 
     api_state = %Exq.Api.Server.State{redis: :testredis, namespace: "test"}
     assert JobQueue.queue_size(api_state.redis, api_state.namespace, "default") == 0
