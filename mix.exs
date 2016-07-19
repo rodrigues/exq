@@ -36,7 +36,7 @@ defmodule Exq.Mixfile do
       {:uuid, "~> 1.1.4" },
       {:redix, "~> 0.3.6"},
       {:poison, ">= 1.2.0 or ~> 2.0"},
-      {:timex, "~> 3.0.3" },
+      {:timex, github: "bitwalker/timex" },
       {:excoveralls, "~> 0.3", only: :test},
       {:flaky_connection, github: "hamiltop/flaky_connection", only: :test},
 
